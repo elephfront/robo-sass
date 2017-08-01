@@ -1,0 +1,31 @@
+{
+    "name": "elephfront/robo-sass",
+    "description": "Robo task to perform SASS files compilation to CSS files.",
+    "type": "robo-tasks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yves P.",
+            "email": "havokinspiration@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "ext-sass": "*",
+        "consolidation/robo": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Elephfront\\RoboSass\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Elephfront\\RoboSass\\Tests\\": "tests/TestCase",
+            "Elephfront\\RoboSass\\Tests\\Utility\\": "tests/Utility"
+        }
+    }
+}
