@@ -29,6 +29,14 @@ matrix:
 
 before_script:
   - composer self-update
+  - git clone git://github.com/absalomedia/sassphp
+  - cd sassphp
+  - git submodule init
+  - git submodule update
+  - php install.php
+  - make install
+  - echo "extension=sass.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - cd ..
   - composer install --prefer-dist --no-interaction
 
   - phpenv rehash
