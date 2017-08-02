@@ -205,7 +205,7 @@ class Sass extends BaseTask implements TaskInterface, Consumer
      * @param string $css CSS that was generated
      * @param string $source Path of the source file.
      * @param string $destination Path of the destination file.
-     * @return bool
+     * @return bool|string True if everything went ok, the filename in error if an error occurred.
      */
     protected function finishCompilation($css, $source, $destination)
     {
