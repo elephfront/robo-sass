@@ -18,7 +18,7 @@ trait LoadSassTaskTrait
 {
     
     /**
-     * Exposes the ImportJavascript task.
+     * Exposes the Sass task.
      *
      * @param array $destinationMap Key / value pairs array where the key is the source and the value the destination.
      * @return \Elephfront\RoboSass\Task\Sass Instance of the Sass Task
