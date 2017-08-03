@@ -14,7 +14,7 @@ namespace Elephfront\RoboSass\Task\Loader;
 
 use Elephfront\RoboSass\Task\Sass;
 
-trait LoadSassTask
+trait LoadSassTaskTrait
 {
     
     /**
