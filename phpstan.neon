@@ -1,0 +1,5 @@
+parameters:
+    ignoreErrors:
+        - '#Property Elephfront\\RoboSass\\Task\\Sass::\$sass \(Elephfront\\RoboSass\\Task\\Sass\) does not accept Sass.#'
+        - '#Call to an undefined method Elephfront\\RoboSass\\Task\\Sass::compileFile().#'
+        - '#Call to an undefined method Elephfront\\RoboSass\\Task\\Sass::compile().#'

@@ -9,7 +9,7 @@
  * @link          http://github.com/elephfront/robo-sass
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace Elephfront\RoboCssMinify\Tests\Utility;
+namespace Elephfront\RoboSass\Tests\Utility;
 
 use Psr\Log\AbstractLogger;
 

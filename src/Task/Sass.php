@@ -52,6 +52,13 @@ class Sass extends BaseTask implements TaskInterface, Consumer
     protected $returnData = [];
 
     /**
+     * Whether or not the destination file should be written after the replace have been done.
+     *
+     * @var bool
+     */
+    protected $writeFile = true;
+
+    /**
      * Constructor. Will bind the destinations map.
      *
      * @param array $destinationsMap Key / value pairs array where the key is the source and the value the destination.
@@ -76,6 +83,18 @@ class Sass extends BaseTask implements TaskInterface, Consumer
     }
 
     /**
+     * Disables the `writeFile` property
+     *
+     * @return self
+     */
+    public function disableWriteFile()
+    {
+        $this->writeFile = false;
+
+        return $this;
+    }
+
+    /**
      * Runs the tasks : will replace all import statements from the source files from the `self::$destinationsMap` and
      * write them to the destinations file from the `self::$destinationsMap`.
      *
@@ -93,7 +112,14 @@ class Sass extends BaseTask implements TaskInterface, Consumer
                 );
             }
 
-            $exec = $this->processDestinationsMap($this->destinationsMap);
+            try {
+                $exec = $this->processDestinationsMap($this->destinationsMap);
+            } catch (InvalidArgumentException $e) {
+                return Result::error(
+                    $this,
+                    $e->getMessage()
+                );
+            }
         }
 
         if ($exec !== true) {
@@ -118,6 +144,10 @@ class Sass extends BaseTask implements TaskInterface, Consumer
         $exec = true;
 
         foreach ($destinationsMap as $source => $destination) {
+            if (!file_exists($source)) {
+                throw new InvalidArgumentException(sprintf('Impossible to find source file `%s`', $source));
+            }
+            
             $css = $this->sass->compileFile($source);
             $exec = $this->finishCompilation($css, $source, $destination);
         }
@@ -149,6 +179,24 @@ class Sass extends BaseTask implements TaskInterface, Consumer
     }
 
     /**
+     * Write the `$destination` file with the css content passed in `$css`
+     *
+     * @param string $destination Path of the destination file to write in
+     * @param string $css CSS content to write into the file
+     * @return int Number of bytes written or false on failure.
+     */
+    public function writeFile(string $destination, string $css)
+    {
+        $destinationDirectory = dirname($destination);
+
+        if (!is_dir($destinationDirectory)) {
+            mkdir($destinationDirectory, 0755, true);
+        }
+
+        return file_put_contents($destination, $css);
+    }
+
+    /**
      * Finish the SASS compilation.
      * The Sass is compiled in the `run()` method because, based on the type of compilation done (whether from a file
      * or directly from the source), the method called is different. This method just group what both type of compilation
@@ -157,27 +205,26 @@ class Sass extends BaseTask implements TaskInterface, Consumer
      * @param string $css CSS that was generated
      * @param string $source Path of the source file.
      * @param string $destination Path of the destination file.
-     * @return bool
+     * @return bool|string True if everything went ok, the filename in error if an error occurred.
      */
     protected function finishCompilation($css, $source, $destination)
     {
-        $destinationDirectory = dirname($destination);
+        $successMessage = sprintf('Compiled SASS from <info>%s</info>', $source);
 
-        if (!is_dir($destinationDirectory)) {
-            mkdir($destinationDirectory, 0755, true);
-        }
+        if ($this->writeFile) {
+            if (!$this->writeFile($destination, $css)) {
+                $error = $source;
+                return $error;
+            }
 
-        if (!file_put_contents($destination, $css)) {
-            return $source;
-        } else {
-            $this->printTaskSuccess(
-                sprintf(
-                    'Compiled SASS from <info>%s</info> to <info>%s</info>',
-                    $source,
-                    $destination
-                )
+            $successMessage = sprintf(
+                'Compiled SASS from <info>%s</info> to <info>%s</info>',
+                $source,
+                $destination
             );
         }
+
+        $this->printTaskSuccess($successMessage);
 
         $this->returnData[$source] = ['css' => $css, 'destination' => $destination];
 
