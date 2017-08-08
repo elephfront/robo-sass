@@ -24,6 +24,26 @@ The recommended way to install composer packages is:
 composer require elephfront/robo-sass
 ```
 
+## Installing the extension
+
+To install the extension, you need to follow the steps below :
+
+```
+git clone git://github.com/absalomedia/sassphp`
+cd sassphp
+git submodule init
+git submodule update
+php install.php
+make test
+make install
+```
+
+Once the extension has been installed, you need to update your php.ini (or add a new configuration file your php.ini goes looking in to load extra configuration setup) file to install the extension on your PHP setup by adding the following line :
+
+```
+extension=sass.so
+```
+
 ## Using the task
 
 You can load the task in your RoboFile using the `LoadSassTaskTrait` trait:
